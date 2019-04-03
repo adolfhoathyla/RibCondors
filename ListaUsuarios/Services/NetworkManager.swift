@@ -7,3 +7,22 @@
 //
 
 import Foundation
+import Moya
+import RxSwift
+
+struct NetworkManager: Networkable {
+    var provider: MoyaProvider<AuthorsApi> = MoyaProvider<AuthorsApi>()
+    
+    func getAllAuthors(disposeBag: DisposeBag, completionHandler: @escaping (([Author]?, Bool, Error?) -> ())) {
+        provider.rx.request(.getAllAuthors()).map([Author].self).subscribe { (event) in
+            switch event {
+            case .success(let authors):
+                completionHandler(authors, true, nil)
+            case .error(let error):
+                completionHandler(nil, false, error)
+            }
+        }.disposed(by: disposeBag)
+    }
+    
+    
+}

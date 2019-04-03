@@ -7,3 +7,11 @@
 //
 
 import Foundation
+import Moya
+import RxSwift
+
+protocol Networkable {
+    var provider: MoyaProvider<AuthorsApi> { get }
+    func getAllAuthors(disposeBag: DisposeBag,
+                       completionHandler: @escaping (([Author]?, Bool, Error?) -> ()))
+}
